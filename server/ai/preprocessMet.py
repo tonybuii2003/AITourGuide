@@ -1,7 +1,8 @@
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
-
+import nltk
+from nltk.corpus import nps_chat
 data = pd.read_csv('/Users/flying-dragon03/Documents/projects/TourGuideApp/openaccess/MetObjects.csv')
 
 relevant_columns = [
@@ -20,6 +21,20 @@ data['combined_text'] = data.apply(
     axis=1
 )
 
+data['category'] = "museum_query"
+
+nltk.download('nps_chat')
+nltk.download('punkt')
+
+posts = nps_chat.xml_posts()
+casual_chats = [post.text for post in posts]
+
+chat_data = pd.DataFrame({
+    'combined_text': casual_chats,
+    'category': ["general_chat"] * len(casual_chats)
+})
+
+final_data = pd.concat([data[['combined_text', 'category']], chat_data], ignore_index=True)
 # Step 1: Retriever - TF-IDF Vectorization
 vectorizer = TfidfVectorizer(stop_words='english')
 tfidf_matrix = vectorizer.fit_transform(data['combined_text'])

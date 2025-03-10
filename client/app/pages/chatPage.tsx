@@ -26,7 +26,7 @@ const ChatScreen: React.FC = () => {
 
     const sendQuery = async (query: string): Promise<string> => {
         try{
-            const response = await axios.post('http://localhost:8080/api/rag', {query})
+            const response = await axios.post('https://5d28c8be01f8.ngrok.app/api/rag', {query})
             return response.data.answer;
         } catch (error) {
             console.error('Error sending query:', error);
@@ -71,7 +71,7 @@ const ChatScreen: React.FC = () => {
         <KeyboardAvoidingView
             style={styles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
             <FlatList
                 data={message}
