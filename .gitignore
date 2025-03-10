@@ -3,3 +3,4 @@
 *.csv
 openaccess/
 Library/
+.bash_history

@@ -1,0 +1,24 @@
+0 verbose cli /usr/local/Cellar/node/23.7.0/bin/node /usr/local/bin/npm
+1 info using npm@10.9.2
+2 info using node@v23.7.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/flying-dragon03/Documents/projects/TourGuideApp/client/.npmrc
+5 silly config load:file:/Users/flying-dragon03/Documents/projects/TourGuideApp/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm run ios
+8 verbose argv "run" "ios"
+9 verbose logfile logs-max:10 dir:/Users/flying-dragon03/Documents/projects/TourGuideApp/.npm/_logs/2025-02-10T23_17_15_268Z-
+10 verbose logfile /Users/flying-dragon03/Documents/projects/TourGuideApp/.npm/_logs/2025-02-10T23_17_15_268Z-debug-0.log
+11 silly logfile done cleaning log files
+12 http fetch GET 200 https://registry.npmjs.org/npm 197ms
+13 verbose cwd /Users/flying-dragon03/Documents/projects/TourGuideApp/client
+14 verbose os Darwin 24.3.0
+15 verbose node v23.7.0
+16 verbose npm  v10.9.2
+17 notice
+17 notice New [31mmajor[39m version of npm available! [31m10.9.2[39m -> [34m11.1.0[39m
+17 notice Changelog: [34mhttps://github.com/npm/cli/releases/tag/v11.1.0[39m
+17 notice To update run: [4mnpm install -g npm@11.1.0[24m
+17 notice  { force: true, [Symbol(proc-log.meta)]: true }
+18 verbose exit 1
+19 verbose code 1
