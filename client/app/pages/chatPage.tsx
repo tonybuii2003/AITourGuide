@@ -15,7 +15,7 @@ const ChatScreen: React.FC = () => {
     const [message, setMessage] = useState<ChatMessage[]>([
         {
             id: 1,
-            text: 'Welcome! Ask any question about The Met.',
+            text: 'Welcome! I\'m your personal custodian. Ask any question about The Met.',
             createdAt: new Date().toLocaleTimeString(),
             user: 'Bot',
           },
@@ -26,7 +26,7 @@ const ChatScreen: React.FC = () => {
 
     const sendQuery = async (query: string): Promise<string> => {
         try{
-            const response = await axios.post('https://5d28c8be01f8.ngrok.app/api/rag', {query})
+            const response = await axios.post('https://5464c65d20a0.ngrok.app/api/rag', {query})
             return response.data.answer;
         } catch (error) {
             console.error('Error sending query:', error);
