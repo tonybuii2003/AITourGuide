@@ -4,7 +4,7 @@
 1. [Overview](#Overview)
 2. [Product Spec](#Product-Spec)
 ## Overview
-CuratAI is your intelligent companion for exploring art and culture. Discover personalized art tours, detailed artwork insights, and curated exhibitions—all tailored to your tastes.
+CuratAI is your intelligent companion for exploring art and culture. Discover personalized art tours, detailed artwork insights, and exhibitions.
 
 ### Description
 With CuratAI, users can effortlessly explore personalized art recommendations and guided tours based on their interests and art preferences. Whether you're captivated by classic masterpieces, innovative modern art, or immersive digital experiences, CuratAI transforms your art journey into an interactive, insightful adventure. Say goodbye to generic museum visits, and hello to curated tours powered by advanced AI and enriched with data from renowned collections like The Met’s.
