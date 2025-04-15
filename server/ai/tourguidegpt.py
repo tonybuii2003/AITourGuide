@@ -8,6 +8,25 @@ import joblib
 import numpy as np
 from dotenv import load_dotenv
 import random
+from langdetect import detect, LangDetectException
+
+language_names = {
+    "af": "Afrikaans", "ar": "Arabic", "bg": "Bulgarian", "bn": "Bengali",
+    "ca": "Catalan", "cs": "Czech", "cy": "Welsh", "da": "Danish",
+    "de": "German", "el": "Greek", "en": "English", "es": "Spanish",
+    "et": "Estonian", "fa": "Persian", "fi": "Finnish", "fr": "French",
+    "gu": "Gujarati", "he": "Hebrew", "hi": "Hindi", "hr": "Croatian",
+    "hu": "Hungarian", "id": "Indonesian", "it": "Italian", "ja": "Japanese",
+    "kn": "Kannada", "ko": "Korean", "lt": "Lithuanian", "lv": "Latvian",
+    "mk": "Macedonian", "ml": "Malayalam", "mr": "Marathi", "ne": "Nepali",
+    "nl": "Dutch", "no": "Norwegian", "pa": "Punjabi", "pl": "Polish",
+    "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sk": "Slovak",
+    "sl": "Slovenian", "so": "Somali", "sq": "Albanian", "sv": "Swedish",
+    "sw": "Swahili", "ta": "Tamil", "te": "Telugu", "th": "Thai", "tl": "Tagalog",
+    "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "vi": "Vietnamese",
+    "zh-cn": "Simplified Chinese", "zh-tw": "Traditional Chinese"
+}
+
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,8 +39,15 @@ api_key = os.getenv('OPENAI_API')
 if api_key is None:
     raise ValueError("The 'OPENAI_API' key is missing from the environment variables.")
 client = AsyncOpenAI(api_key=api_key)
-
+def detect_language(text):
+    try:
+        lang = detect(text)
+        return lang
+    except LangDetectException:
+        return "en"
 async def rag_query(user_query):
+    user_lang = detect_language(user_query)
+    language_name = language_names[user_lang]
     query_vector = vectorizer.transform([user_query])
 
     similarity_scores = cosine_similarity(query_vector, tfidf_matrix).flatten()
@@ -38,32 +64,18 @@ async def rag_query(user_query):
         second_best_similarity = similarity_scores[top_indices[1]]
     else:
         second_best_similarity = 0
-    # print(f"\nUser Query: {user_query}")
-    # print(f"Max Similarity: {max_similarity}, Difference: {abs(max_similarity - second_best_similarity)}")
-    # print(f"Dynamic General Chat Threshold: {GENERAL_CHAT_THRESHOLD}")
-    # print(f"Dynamic Difference Threshold: {MIN_DIFFERENCE_THRESHOLD}")
-    # print(f"Retrieved Category: {retrieved_category}")
-    # if (max_similarity > GENERAL_CHAT_THRESHOLD or 
-    #     retrieved_category == "general_chat"):
-    #     general_chat_responses = [
-    #         "Hey there! How’s your day going?",
-    #         "Hello! Hope you're having a great time.",
-    #         "Hi! What’s on your mind?",
-    #         "Hey! How can I assist you today?"
-    #     ]
-    #     return random.choice(general_chat_responses)
     prompt = f"Context: {retrieved_context['combined_text']}\n\nQuestion: {user_query}\nAnswer:"
     system_prompt = (
-        "You are an expert tour guide at The Metropolitan Museum of Art (The Met) in New York City. "
+        "You are an expert tour guide or curator named CuratAI at The Metropolitan Museum of Art (The Met) in New York City. "
         "Your role is to provide engaging, accurate, and detailed information about the museum's exhibits, "
         "history, and artworks. Answer questions with enthusiasm, clarity, and a friendly tone, making the information "
         "accessible to all ages. Highlight interesting facts, cultural significance, and historical context when relevant. "
         "Feel free to recommend must-see exhibits, hidden gems, and tips for enjoying the museum experience. "
-        "If the visitor asks in a specific language, respond in the same language fluently while maintaining the same level of detail and professionalism. "
         "Always adapt your tone to be culturally appropriate and respectful. "
         "If you don’t have enough information, respond honestly and encourage the visitor to explore further at The Met. "
         "However, if the question is casual (e.g., greetings, small talk, or unrelated topics), respond naturally as a friendly assistant, "
         "without forcing museum-related content. Engage in normal conversation when appropriate."
+        f"The user asked in {language_name}. Please provide your answer entirely in {language_name} fluently while maintaining the same level of detail and professionalism."
     )
     response = await client.chat.completions.create(
         model="gpt-4o",

@@ -11,6 +11,7 @@ import com.tourguideai.server.models.QueryRequest;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = {"https://nwreoxk-anonymous-8081.exp.direct/", "https://curatai.tonybui.dev/"})
 public class RAGController {
     private final RAGRunnerService ragService;
 
