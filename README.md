@@ -8,7 +8,7 @@
 
 ## Overview
 
-CuratAI is your ultimate AI-powered companion for exploring museums, cultural institutions, and heritage sites. We harness the power of advanced artificial intelligence to deliver interactive, real-time storytelling and personalized tours—starting with a chat-based interface, with plans to evolve into voice-enabled and vision-capable guidance in the future.
+CuratAI is your ultimate AI-powered companion for exploring museums, cultural institutions, and attraction sites. We harness the power of advanced artificial intelligence to deliver interactive, chat-based interface.
 
 ### Description
 
