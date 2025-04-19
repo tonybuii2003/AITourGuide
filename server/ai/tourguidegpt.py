@@ -8,26 +8,7 @@ import joblib
 import numpy as np
 from dotenv import load_dotenv
 import random
-from langdetect import detect, LangDetectException
-
-language_names = {
-    "af": "Afrikaans", "ar": "Arabic", "bg": "Bulgarian", "bn": "Bengali",
-    "ca": "Catalan", "cs": "Czech", "cy": "Welsh", "da": "Danish",
-    "de": "German", "el": "Greek", "en": "English", "es": "Spanish",
-    "et": "Estonian", "fa": "Persian", "fi": "Finnish", "fr": "French",
-    "gu": "Gujarati", "he": "Hebrew", "hi": "Hindi", "hr": "Croatian",
-    "hu": "Hungarian", "id": "Indonesian", "it": "Italian", "ja": "Japanese",
-    "kn": "Kannada", "ko": "Korean", "lt": "Lithuanian", "lv": "Latvian",
-    "mk": "Macedonian", "ml": "Malayalam", "mr": "Marathi", "ne": "Nepali",
-    "nl": "Dutch", "no": "Norwegian", "pa": "Punjabi", "pl": "Polish",
-    "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sk": "Slovak",
-    "sl": "Slovenian", "so": "Somali", "sq": "Albanian", "sv": "Swedish",
-    "sw": "Swahili", "ta": "Tamil", "te": "Telugu", "th": "Thai", "tl": "Tagalog",
-    "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "vi": "Vietnamese",
-    "zh-cn": "Simplified Chinese", "zh-tw": "Traditional Chinese"
-}
-
-
+from language_detector import LanguageDetector
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 vectorizer = joblib.load(os.path.join(script_dir, 'vectorizer.pkl'))
@@ -39,15 +20,9 @@ api_key = os.getenv('OPENAI_API')
 if api_key is None:
     raise ValueError("The 'OPENAI_API' key is missing from the environment variables.")
 client = AsyncOpenAI(api_key=api_key)
-def detect_language(text):
-    try:
-        lang = detect(text)
-        return lang
-    except LangDetectException:
-        return "en"
 async def rag_query(user_query):
-    user_lang = detect_language(user_query)
-    language_name = language_names[user_lang]
+    detector = LanguageDetector()
+    language_name = detector.detect(user_query)
     query_vector = vectorizer.transform([user_query])
 
     similarity_scores = cosine_similarity(query_vector, tfidf_matrix).flatten()
