@@ -2,11 +2,9 @@
 import warnings
 
 # Ignore the specific FastText load_model warning
-warnings.filterwarnings(
-    "ignore",
-    message=".*load_model does not return WordVectorModel or SupervisedModel any more.*"
-)
+warnings.filterwarnings("ignore")
 import fasttext
+fasttext.FastText.eprint = lambda *args, **kwargs: None
 from huggingface_hub import hf_hub_download
 
 class LanguageDetector:
