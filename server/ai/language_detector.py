@@ -4,43 +4,49 @@ import warnings
 # Ignore the specific FastText load_model warning
 warnings.filterwarnings("ignore")
 import fasttext
-fasttext.FastText.eprint = lambda *args, **kwargs: None
-from huggingface_hub import hf_hub_download
 
+from huggingface_hub import hf_hub_download
+import pandas as pd
+import os
+import joblib
+script_dir = os.path.dirname(os.path.abspath(__file__))
 class LanguageDetector:
     """
     A language detector using Facebook's FastText language identification model.
     Returns full language names for detected languages.
     """
-    def __init__(self, model_repo="facebook/fasttext-language-identification", fallback="English"):
+    def __init__(
+        self,
+        model_repo: str = "facebook/fasttext-language-identification",
+        iso_table: str = os.path.join(script_dir,"iso-639-3.tab"),
+        fallback: str = "English"
+    ):
         # Download and load the fastText model
         model_path = hf_hub_download(repo_id=model_repo, filename="model.bin")
+        fasttext.FastText.eprint = lambda *args, **kwargs: None
         self.model = fasttext.load_model(model_path)
         self.fallback = fallback
-        # Mapping ISO codes to human-readable names
+        df = pd.read_csv(iso_table, sep="\t", dtype=str, usecols=["Id", "Ref_Name"])
+        iso_map = df.set_index("Id")["Ref_Name"].to_dict()
+        raw_labels = self.model.get_labels()  
+        codes = [
+            lbl
+            .replace("__label__", "")
+            .split("_", 1)[0]      # take only the ISO code before the underscore
+            for lbl in raw_labels
+        ]
         self.code_to_name = {
-            "af": "Afrikaans", "ar": "Arabic", "bg": "Bulgarian", "bn": "Bengali",
-            "ca": "Catalan", "cs": "Czech", "cy": "Welsh", "da": "Danish",
-            "de": "German", "el": "Greek", "en": "English", "es": "Spanish",
-            "et": "Estonian", "fa": "Persian", "fi": "Finnish", "fr": "French",
-            "gu": "Gujarati", "he": "Hebrew", "hi": "Hindi", "hr": "Croatian",
-            "hu": "Hungarian", "id": "Indonesian", "it": "Italian", "ja": "Japanese",
-            "kn": "Kannada", "ko": "Korean", "lt": "Lithuanian", "lv": "Latvian",
-            "mk": "Macedonian", "ml": "Malayalam", "mr": "Marathi", "ne": "Nepali",
-            "nl": "Dutch", "no": "Norwegian", "pa": "Punjabi", "pl": "Polish",
-            "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sk": "Slovak",
-            "sl": "Slovenian", "so": "Somali", "sq": "Albanian", "sv": "Swedish",
-            "sw": "Swahili", "ta": "Tamil", "te": "Telugu", "th": "Thai", "tl": "Tagalog",
-            "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "vi": "Vietnamese",
-            "zh-cn": "Chinese (Simplified)", "zh-tw": "Chinese (Traditional)"
+            code: iso_map.get(code, code)  # if missing, just use 'eng' or whatever
+            for code in codes
         }
 
     def detect(self, text: str) -> str:
-        if len(text) < 3 or len(text.split()) < 1:
+        if len(text) < 2 or len(text.split()) < 1:
             return self.fallback
         # Predict top label
         labels, probs = self.model.predict(text, k=1)
-        code = labels[0].replace("__label__", "")
+        code = labels[0].replace("__label__", "").replace("_Latn", "").replace("_Cyrl", "").replace("_Arab", "")
+        
         confidence = probs[0]
         if confidence < 0.80:
             return self.fallback

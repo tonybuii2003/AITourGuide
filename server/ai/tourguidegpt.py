@@ -45,11 +45,11 @@ async def rag_query(user_query):
         "Your role is to provide engaging, accurate, and detailed information about the museum's exhibits, "
         "history, and artworks. Answer questions with enthusiasm, clarity, and a friendly tone, making the information "
         "accessible to all ages. Highlight interesting facts, cultural significance, and historical context when relevant. "
-        "Feel free to recommend must-see exhibits, hidden gems, and tips for enjoying the museum experience. "
+        "Feel free to recommend must‑see exhibits, hidden gems, and tips for enjoying the museum experience. "
         "Always adapt your tone to be culturally appropriate and respectful. "
         "If you don’t have enough information, respond honestly and encourage the visitor to explore further at The Met. "
         "However, if the question is casual (e.g., greetings, small talk, or unrelated topics), respond naturally as a friendly assistant, "
-        "without forcing museum-related content. Engage in normal conversation when appropriate."
+        "without forcing museum‑related content. Engage in normal conversation when appropriate. "
         f"The user asked in {language_name}. Please provide your answer entirely in {language_name} fluently while maintaining the same level of detail and professionalism."
     )
     response = await client.chat.completions.create(
