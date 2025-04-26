@@ -45,7 +45,6 @@ const ChatScreen: React.FC = () => {
   const handleSend = (): void => {
     if (!text.trim()) return;
   
-    // 1️⃣ Add the user's message
     const trimmed = text.trim();
     setMessage(prev => [
       ...prev,
@@ -53,12 +52,9 @@ const ChatScreen: React.FC = () => {
     ]);
     setText('');
   
-    // 2️⃣ Track question count & show loader
     const nextCount = questionCount + 1;
     setQuestionCount(nextCount);
     setLoading(true);
-  
-    // 3️⃣ Insert empty Bot placeholder
     setMessage(prev => {
       const botId = prev.length + 1;
       botIdRef.current = botId;
@@ -68,7 +64,6 @@ const ChatScreen: React.FC = () => {
       ];
     });
   
-    // 4️⃣ Fire off a POST‐SSE XHR to your @PostMapping("/rag/stream")
     const xhr = new XMLHttpRequest();
     const url = 'https://007dc339a8f4.ngrok.app/api/rag/stream';
     xhr.open('POST', url, true);
@@ -98,14 +93,6 @@ const ChatScreen: React.FC = () => {
     
         if (loading) setLoading(false);
     
-        // (optional) debug each char, including spaces & newlines
-        for (const char of fullData) {
-          if (char === ' ') console.log('[SPACE]');
-          else if (char === '\n') console.log('[NEWLINE]');
-          else             console.log(`[${char}]`);
-        }
-    
-        // append the chunk—including its \n’s—into your bot message
         setMessage(prev => {
           const copy = [...prev];
           const idx = copy.findIndex(m => m.id === botIdRef.current);
@@ -116,7 +103,6 @@ const ChatScreen: React.FC = () => {
         });
       });
     
-      // leave the last (possibly partial) event in the buffer
       buffer = events[events.length - 1];
     };
     xhr.onloadend = () => {
