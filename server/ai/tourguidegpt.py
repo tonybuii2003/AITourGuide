@@ -64,11 +64,8 @@ async def rag_query(user_query):
 
     async for chunk in response:
         delta = chunk.choices[0].delta.content
-        if not delta:
-            continue
-        # split on spaces if you really want word-by-word:
-        for word in delta.split(" "):
-            print(word + " ", end="", flush=True)
+        if delta:
+            print(delta, end="", flush=True)
 
 
 if __name__ == '__main__':  

@@ -44,77 +44,81 @@ const ChatScreen: React.FC = () => {
 
   const handleSend = (): void => {
     if (!text.trim()) return;
-
+  
     // 1️⃣ Add the user's message
     const trimmed = text.trim();
     setMessage(prev => [
       ...prev,
-      {
-        id: prev.length + 1,
-        text: trimmed,
-        createdAt: new Date().toLocaleTimeString(),
-        user: 'Me',
-      },
+      { id: prev.length + 1, text: trimmed, createdAt: new Date().toLocaleTimeString(), user: 'Me' },
     ]);
     setText('');
-
+  
     // 2️⃣ Track question count & show loader
     const nextCount = questionCount + 1;
     setQuestionCount(nextCount);
     setLoading(true);
-
-    // 3️⃣ Add an empty Bot placeholder and store its id in a ref
+  
+    // 3️⃣ Insert empty Bot placeholder
     setMessage(prev => {
-      const newBotId = prev.length + 1;
-      botIdRef.current = newBotId;
+      const botId = prev.length + 1;
+      botIdRef.current = botId;
       return [
         ...prev,
-        {
-          id: newBotId,
-          text: '',
-          createdAt: new Date().toLocaleTimeString(),
-          user: 'Bot',
-        },
+        { id: botId, text: '', createdAt: new Date().toLocaleTimeString(), user: 'Bot' },
       ];
     });
-
-    // 4️⃣ Fire off a POST‐SSE XHR
+  
+    // 4️⃣ Fire off a POST‐SSE XHR to your @PostMapping("/rag/stream")
     const xhr = new XMLHttpRequest();
     const url = 'https://007dc339a8f4.ngrok.app/api/rag/stream';
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Accept', 'text/event-stream');
     xhr.setRequestHeader('Content-Type', 'application/json');
-
+  
     let lastIndex = 0;
     let buffer = '';
-    let accumulated = '';
-
+  
     xhr.onprogress = () => {
       const chunk = xhr.responseText.slice(lastIndex);
       lastIndex = xhr.responseText.length;
       buffer += chunk;
-
-      const parts = buffer.split('\n\n');
-      parts.slice(0, -1).forEach(event => {
-        event.split('\n').forEach(line => {
-          if (line.startsWith('data:')) {
-            const data = line.replace(/^data:\s*/, '');
-            if (accumulated === '') {
-              setLoading(false);
-            }    
-            accumulated += data;
-            setMessage(prev => {
-              const copy = [...prev];
-              const idx = copy.findIndex(m => m.id === botIdRef.current);
-              if (idx !== -1) copy[idx].text = accumulated;
-              return copy;
-            });
+    
+      // split on the SSE event boundary
+      const events = buffer.split('\n\n');
+      // process every *complete* event
+      events.slice(0, -1).forEach(evt => {
+        // extract and clean each data: line
+        const dataLines = evt
+          .split('\n')
+          .filter(l => l.startsWith('data:'))
+          .map(l => l.replace(/^data:/, ''));
+    
+        // re-join with *one* newline between each line
+        const fullData = dataLines.join('\n');
+    
+        if (loading) setLoading(false);
+    
+        // (optional) debug each char, including spaces & newlines
+        for (const char of fullData) {
+          if (char === ' ') console.log('[SPACE]');
+          else if (char === '\n') console.log('[NEWLINE]');
+          else             console.log(`[${char}]`);
+        }
+    
+        // append the chunk—including its \n’s—into your bot message
+        setMessage(prev => {
+          const copy = [...prev];
+          const idx = copy.findIndex(m => m.id === botIdRef.current);
+          if (idx !== -1) {
+            copy[idx].text += fullData;
           }
+          return copy;
         });
       });
-      buffer = parts[parts.length - 1];
+    
+      // leave the last (possibly partial) event in the buffer
+      buffer = events[events.length - 1];
     };
-
     xhr.onloadend = () => {
       setLoading(false);
       if (nextCount === 3) {
@@ -122,24 +126,25 @@ const ChatScreen: React.FC = () => {
           ...prev,
           {
             id: prev.length + 1,
+            user: 'Bot',
+            feedback: true,
             text:
               "From Tony (Founding Engineer): I hope you enjoy CuratAI! How's the experience? Please provide your feedback here: https://forms.gle/axCVoVievgbC2NMZ9",
             createdAt: new Date().toLocaleTimeString(),
-            user: 'Bot',
-            feedback: true,
           },
         ]);
       }
     };
-
-    xhr.onerror = () => {
+  
+    xhr.onerror = (e) => {
+      console.error('SSE error', e);
       setLoading(false);
-      console.error('Stream error', xhr.statusText);
     };
-
-    // kick it off
+  
     xhr.send(JSON.stringify({ query: trimmed }));
   };
+  
+  
 
   const renderItem: ListRenderItem<ChatMessage> = ({ item }) => {
     if (item.user === 'Bot' && !item.feedback && item.text.trim() === '') {
