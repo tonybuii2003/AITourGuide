@@ -23,6 +23,11 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignSelf: 'flex-start',
   },
+  feedbackMessage: {
+    backgroundColor: 'lightblue',
+    alignSelf: 'flex-start',
+    // add other styling properties as needed
+  },
   messageText: {
     fontSize: 16,
   },
@@ -47,6 +52,7 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#CCC',
+    fontSize: 16,
   },
   sendButton: {
     marginLeft: 10,

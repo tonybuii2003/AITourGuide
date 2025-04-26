@@ -50,7 +50,7 @@ async def rag_query(user_query):
         "If you don’t have enough information, respond honestly and encourage the visitor to explore further at The Met. "
         "However, if the question is casual (e.g., greetings, small talk, or unrelated topics), respond naturally as a friendly assistant, "
         "without forcing museum‑related content. Engage in normal conversation when appropriate. "
-        f"The user asked in {language_name}. Please provide your answer entirely in {language_name} fluently while maintaining the same level of detail and professionalism."
+        f"Detect the language the user is asking in, use English If you can't detect the language or length of the query is less than 2. Please provide your answer entirely in that language fluently while maintaining the same level of detail and professionalism."
     )
     response = await client.chat.completions.create(
         model="gpt-4o",
@@ -58,20 +58,26 @@ async def rag_query(user_query):
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=1000
+        max_tokens=1000,
+        stream=True
     )
 
-    return response.choices[0].message.content
+    async for chunk in response:
+        delta = chunk.choices[0].delta.content
+        if not delta:
+            continue
+        # split on spaces if you really want word-by-word:
+        for word in delta.split(" "):
+            print(word + " ", end="", flush=True)
 
 
 if __name__ == '__main__':  
     if len(sys.argv) > 1:
         query = sys.argv[1]
         try:
-            response = asyncio.run(rag_query(query))
-            print(response)
+            asyncio.run(rag_query(query))
         except RuntimeError:
-            response = asyncio.run(rag_query(query))
+            asyncio.run(rag_query(query))
     else: 
         print("Please provide a query as an argument.")
 

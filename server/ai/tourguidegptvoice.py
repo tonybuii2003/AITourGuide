@@ -45,7 +45,7 @@ async def rag_query(user_query: str) -> str:
         "If you don’t have enough information, respond honestly and encourage the visitor to explore further at The Met. "
         "However, if the question is casual (e.g., greetings, small talk, or unrelated topics), respond naturally as a friendly assistant, "
         "without forcing museum‑related content. Engage in normal conversation when appropriate. "
-        f"The user asked in {lang}. Please provide your answer entirely in {lang} fluently while maintaining the same level of detail and professionalism."
+        f"Detect the language the user is asking in, use English If you can't detect the language or length of the query is less than 2. Please provide your answer entirely in that language fluently while maintaining the same level of detail and professionalism."
     )
     prompt = f"Context: {ctx}\n\nQuestion: {user_query}\nAnswer:"
     resp = await client.chat.completions.create(
@@ -56,13 +56,11 @@ async def rag_query(user_query: str) -> str:
     )
     return resp.choices[0].message.content
 
-# ─── WRAP rag_query AS A TOOL ──────────────────────────────────────────────────
 
 @function_tool
 async def rag_tool(query: str) -> str:
     return await rag_query(query)
 
-# ─── DEFINE YOUR VOICE AGENT ───────────────────────────────────────────────────
 
 agent = Agent(
     name="CuratAI",
@@ -74,7 +72,6 @@ agent = Agent(
     tools=[rag_tool],
 )
 
-# ─── RECORD → RAG → TTS PIPELINE ───────────────────────────────────────────────
 def record_on_space(fs: int):
     """
     Wait for SPACE to start recording, then record until SPACE is pressed again.

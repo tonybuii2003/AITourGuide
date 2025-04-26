@@ -1,17 +1,16 @@
 package com.tourguideai.server.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.tourguideai.server.services.RAGRunnerService;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.http.MediaType;
 
-import com.tourguideai.server.models.QueryResponse;
 import com.tourguideai.server.models.QueryRequest;
-
+import com.tourguideai.server.services.RAGRunnerService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {"https://nwreoxk-anonymous-8081.exp.direct/", "https://curatai.tonybui.dev/"})
+@CrossOrigin(origins = {"https://nwreoxk-anonymous-8081.exp.direct/", "https://curatai.tonybui.dev/", "http://localhost:8082/"})
 public class RAGController {
     private final RAGRunnerService ragService;
 
@@ -20,9 +19,14 @@ public class RAGController {
         this.ragService = ragRunnerService;
     }
 
-    @PostMapping("/rag")
-    public ResponseEntity<QueryResponse> askRag(@RequestBody QueryRequest request) {
-        String answer = ragService.runRagQuery(request);
-        return ResponseEntity.ok(new QueryResponse(answer));
+    @PostMapping(
+    value    = "/rag/stream",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.TEXT_EVENT_STREAM_VALUE
+    )
+    public SseEmitter streamRag(@RequestBody QueryRequest request) {
+        SseEmitter emitter = new SseEmitter();
+        ragService.runRagQueryStream(request.getQuery(), emitter);
+        return emitter;
     }
 }

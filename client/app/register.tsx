@@ -52,7 +52,7 @@ const RegisterScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', // use your desired background color
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -64,25 +64,27 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   input: {
-    width: '100%',
+    width: '90%',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 15,
     marginBottom: 15,
+    fontSize: 16,
     color: '#333',
   },
   button: {
-    backgroundColor: '#007AFF', // use your primary color
+    backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
-    width: '100%',
+    width: '90%',
     alignItems: 'center',
     marginBottom: 20,
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   linkText: {
     color: '#007AFF',

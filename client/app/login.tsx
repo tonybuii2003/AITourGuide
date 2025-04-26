@@ -44,7 +44,7 @@ const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', // use your desired background color
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -63,10 +63,11 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     color: '#333',
+    fontSize: 16,
     maxWidth: 300,
   },
   button: {
-    backgroundColor: '#007AFF', // use your primary color
+    backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
     width: '90%',
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   linkText: {
     color: '#007AFF',
