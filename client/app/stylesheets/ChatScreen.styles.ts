@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   myMessage: {
-    backgroundColor: '#d7a244',
+    backgroundColor: '#dbac59',
     alignSelf: 'flex-end',
   },
   otherMessage: {
