@@ -11,12 +11,13 @@ export const styles = StyleSheet.create({
   },
   messageContainer: {
     marginVertical: 5,
-    padding: 10,
-    borderRadius: 8,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 20,
     maxWidth: '80%',
   },
   myMessage: {
-    backgroundColor: '#DCF8C6',
+    backgroundColor: '#d7a244',
     alignSelf: 'flex-end',
   },
   otherMessage: {
@@ -56,13 +57,13 @@ export const styles = StyleSheet.create({
   },
   sendButton: {
     marginLeft: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#dbac59',
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 8,
   },
   sendButtonText: {
-    color: '#FFF',
+    color: '#00',
     fontWeight: 'bold',
   },
 });

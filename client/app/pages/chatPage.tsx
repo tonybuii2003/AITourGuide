@@ -156,7 +156,7 @@ const ChatScreen: React.FC = () => {
               {link}
             </Text>
           </Text>
-          <Text style={styles.messageTime}>{item.createdAt}</Text>
+          {/* <Text style={styles.messageTime}>{item.createdAt}</Text> */}
         </View>
       );
     }
@@ -171,7 +171,7 @@ const ChatScreen: React.FC = () => {
         <Markdown style={{ body: { fontSize: 16 } }}>
           {item.text}
         </Markdown>
-        <Text style={styles.messageTime}>{item.createdAt}</Text>
+        {/* <Text style={styles.messageTime}>{item.createdAt}</Text> */}
       </View>
     );
   };
