@@ -27,7 +27,6 @@ export const styles = StyleSheet.create({
   feedbackMessage: {
     backgroundColor: 'lightblue',
     alignSelf: 'flex-start',
-    // add other styling properties as needed
   },
   messageText: {
     fontSize: 16,
