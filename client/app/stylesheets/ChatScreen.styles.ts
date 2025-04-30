@@ -56,13 +56,13 @@ export const styles = StyleSheet.create({
   },
   sendButton: {
     marginLeft: 10,
-    backgroundColor: '#dbac59',
+    backgroundColor: '#FFB703',
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 8,
   },
   sendButtonText: {
-    color: '#00',
+    color: '#0',
     fontWeight: 'bold',
   },
 });

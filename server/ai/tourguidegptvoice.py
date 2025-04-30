@@ -3,17 +3,23 @@ import sys
 import joblib
 import numpy as np
 import asyncio
-import readchar
+import argparse
+import subprocess
 import sounddevice as sd
 from dotenv import load_dotenv
 from sklearn.metrics.pairwise import cosine_similarity
 from openai import AsyncOpenAI
+from pydub import AudioSegment
 from language_detector import LanguageDetector
-
+import subprocess
 from agents import Agent, function_tool
 from agents.voice import AudioInput, SingleAgentVoiceWorkflow, VoicePipeline
 from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
+from dotenv import load_dotenv
+load_dotenv() 
 
+import wave
+import io
 # ─── RAG SETUP (unchanged) ─────────────────────────────────────────────────────
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -71,49 +77,81 @@ agent = Agent(
     model="gpt-4o-mini",
     tools=[rag_tool],
 )
-
-def record_on_space(fs: int):
+def decode_audio_bytes(raw_bytes: bytes, target_sr: int = 24000):
     """
-    Wait for SPACE to start recording, then record until SPACE is pressed again.
-    Returns a 1D np.int16 array of audio samples.
+    Decode the in-memory webm/other format bytes into a mono int16 numpy array.
     """
-    # 1) Wait for start
-    print("🎤 Press SPACE to start recording")
-    while True:
-        key = readchar.readkey()
-        if key == ' ':
-            break
+    # Write bytes to a pipe and call ffmpeg via subprocess
+    p = subprocess.Popen(
+        [
+            "ffmpeg", "-i", "pipe:0",
+            "-f", "s16le", "-acodec", "pcm_s16le",
+            "-ac", "1", "-ar", str(target_sr),
+            "pipe:1"
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    out, _ = p.communicate(raw_bytes)
+    buffer = np.frombuffer(out, dtype=np.int16)
+    return buffer, target_sr
 
-    print("🔴 Recording… press SPACE again to stop")
-    frames = []
-
-    # 2) Stream into frames until SPACE
-    def callback(indata, frames_count, time, status):
-        frames.append(indata.copy())
-
-    with sd.InputStream(samplerate=fs, channels=1, dtype='int16', callback=callback):
-        while True:
-            if readchar.readkey() == ' ':
-                break
-
-    print("⏹ Recording stopped")
-    # 3) concatenate into one array
-    audio = np.concatenate(frames, axis=0)
-    return audio.flatten()
 async def main():
-    fs = 24000
-    audio_buffer = record_on_space(fs)
-    pipeline = VoicePipeline(workflow=SingleAgentVoiceWorkflow(agent))
+    p = argparse.ArgumentParser(
+        description="CuratAI voice pipeline (supports --stdin/--stdout streaming)"
+    )
+    p.add_argument("--stdin",  action="store_true",
+                   help="Read the entire input audio from stdin.buffer")
+    p.add_argument("--stdout", action="store_true",
+                   help="Write the reply audio to stdout.buffer")
+    p.add_argument("audio_path", nargs="?",
+                   help="Path to audio file (if not using --stdin)")
+    args = p.parse_args()
+
+    # Load audio bytes
+    if args.stdin:
+        raw_audio = sys.stdin.buffer.read()
+    else:
+        if not args.audio_path or not os.path.isfile(args.audio_path):
+            print("❌ Missing or invalid audio_path", file=sys.stderr)
+            sys.exit(1)
+        with open(args.audio_path, "rb") as f:
+            raw_audio = f.read()
+
+    # Decode into numpy PCM buffer
+    audio_buffer, fs = decode_audio_bytes(raw_audio, target_sr=24000)
+
+    # Run through voice pipeline
+    pipeline    = VoicePipeline(workflow=SingleAgentVoiceWorkflow(agent))
     audio_input = AudioInput(buffer=audio_buffer)
+    result      = await pipeline.run(audio_input)
 
-    print("⏳ Sending to CuratAI…")
-    result = await pipeline.run(audio_input)
+    # Collect TTS bytes: assuming the pipeline yields raw PCM or wav bytes
+    # Here we’ll accumulate all audio events
+    tts_bytes = bytearray()
+    async for event in result.stream():
+        if event.type == "voice_stream_event_audio":
+            tts_bytes.extend(event.data)
 
-    print("▶️ Playing CuratAI’s response…")
-    with sd.OutputStream(samplerate=fs, channels=1, dtype='int16') as player:
-        async for event in result.stream():
-            if event.type == "voice_stream_event_audio":
-                player.write(event.data)
+    # Output
+    if args.stdout:
+        wav_buf = io.BytesIO()
+        with wave.open(wav_buf, 'wb') as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(fs) 
+            wf.writeframes(tts_bytes)
+        wav_bytes = wav_buf.getvalue()
+        sys.stdout.buffer.write(wav_bytes)
+        sys.stdout.flush()
+    
+    else:
+        # Fallback: save to file
+        out_path = args.audio_path + ".reply.wav"
+        with open(out_path, "wb") as f:
+            f.write(tts_bytes)
+        print("▶️ Written reply to", out_path)
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -16,7 +16,7 @@ tfidf_matrix = joblib.load(os.path.join(script_dir, 'tfidf_matrix.pkl'))
 data = joblib.load(os.path.join(script_dir, 'data.pkl'))
 
 load_dotenv()
-api_key = os.getenv('OPENAI_API')
+api_key = os.getenv('OPENAI_API_KEY')
 if api_key is None:
     raise ValueError("The 'OPENAI_API' key is missing from the environment variables.")
 client = AsyncOpenAI(api_key=api_key)
