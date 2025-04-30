@@ -15,8 +15,6 @@ import subprocess
 from agents import Agent, function_tool
 from agents.voice import AudioInput, SingleAgentVoiceWorkflow, VoicePipeline
 from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
-from dotenv import load_dotenv
-load_dotenv() 
 
 import wave
 import io
@@ -28,7 +26,7 @@ tfidf_matrix = joblib.load(os.path.join(script_dir, 'tfidf_matrix.pkl'))
 data = joblib.load(os.path.join(script_dir, 'data.pkl'))
 
 load_dotenv()
-api_key = os.getenv('OPENAI_API')
+api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
     raise ValueError("Missing OPENAI_API in your environment")
 client = AsyncOpenAI(api_key=api_key)

@@ -1,21 +1,39 @@
 // app/_layout.tsx
 import React from "react";
 import { Stack } from "expo-router";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { useRouter, useSegments, Redirect } from "expo-router";
 
-const HeaderTitle = () => (
-  <View style={{ flexDirection: "row", alignItems: "center" }}>
-    <Image
-      source={require("../assets/images/logo.jpeg")}
-      style={{ width: 50, height: 50, resizeMode: "contain", marginRight: 8 }}
-    />
-    <Text style={{ fontSize: 18, fontWeight: "bold" }}>CuratAI</Text>
-  </View>
-);
+function HeaderTitle() {
+  const router = useRouter();
+  return (
+    <TouchableOpacity
+      style={styles.titleContainer}
+      onPress={() => router.push("/")}
+    >
+      <Image
+        source={require("../assets/images/logo.jpeg")}
+        style={styles.logo}
+      />
+      <Text style={styles.titleText}>CuratAI</Text>
+    </TouchableOpacity>
+  );
+}
 
 export default function RootLayout() {
   const router = useRouter();
+  const segments = useSegments();
+
+  // If we're on any sub‐route (length > 1), immediately redirect back to "/"
+  if (segments.length > 1) {
+    return <Redirect href="/" />;
+  }
 
   return (
     <Stack
@@ -35,6 +53,20 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
+    marginRight: 8,
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
   boxButton: {
     marginRight: 16,
     paddingHorizontal: 10,

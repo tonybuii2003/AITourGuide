@@ -19,7 +19,7 @@ import com.tourguideai.server.services.VoiceAssistantService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:8082/")
+@CrossOrigin(origins = "https://curatai.tonybui.dev/")
 public class VoiceAgentController {
     private final VoiceAssistantService assistantService;
 

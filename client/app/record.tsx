@@ -158,7 +158,7 @@ export default function VoiceChatScreen() {
       }
 
       const axiosResp = await axios.post(
-        `http://localhost:8083/api/guests/${guestId}/audio`,
+        `https://007dc339a8f4.ngrok.app/api/guests/${guestId}/audio`,
         form,
         { responseType: 'arraybuffer' }
       );
