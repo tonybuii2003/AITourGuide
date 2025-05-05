@@ -47,10 +47,10 @@ CuratAI transforms the traditional museum experience by merging state-of-the-art
 - **Chat-Based Interface:**  
   Users receive personalized tour recommendations and engage in dynamic Q&A with our AI through a conversational chat interface.
 
-**Future Enhancements:**
-
 - **Voice Interaction:**  
   Our AI will support real-time voice conversations, allowing users to speak naturally and receive audible responses for a more immersive experience.
+
+**Future Enhancements:**
   
 - **Vision Capabilities:**  
   The AI will be able to interpret visual inputs—such as photos of exhibits—to provide detailed, context-aware information and insights, further personalizing the tour experience.
