@@ -15,10 +15,12 @@ CuratAI is your ultimate AI-powered companion for exploring museums, cultural in
 CuratAI transforms the traditional museum experience by merging state-of-the-art AI technology with timeless storytelling. Today, users interact with our engaging chat interface for tour recommendations, dynamic Q&A, and personalized content based on their interests. In the near future, our AI will be able to talk and visually interpret exhibits, creating an immersive, multi-sensory experience that revolutionizes cultural exploration.
 
 ### Screenshots
-![ChatScreen](https://imgur.com/a/9WUqsFB)
-![ChatScreen-Mobile](https://imgur.com/a/Ny4XQXs)
-![VoiceScreen](https://imgur.com/a/xWpYgUB)
-![VoiceScreen-Mobile](https://imgur.com/a/2EjBB3W)
+
+![ChatScreen](https://i.imgur.com/AbCdEfG.png)  
+![ChatScreen-Mobile](https://i.imgur.com/H1JkLmN.jpg)  
+![VoiceScreen](https://i.imgur.com/XyZ1234.png)  
+![VoiceScreen-Mobile](https://i.imgur.com/PqRsTuv.jpg)
+
 
 ## Product Spec
 
