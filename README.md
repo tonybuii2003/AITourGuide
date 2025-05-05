@@ -16,10 +16,10 @@ CuratAI transforms the traditional museum experience by merging state-of-the-art
 
 ### Screenshots
 
-![ChatScreen](https://i.imgur.com/AbCdEfG.png)  
-![ChatScreen-Mobile](https://i.imgur.com/H1JkLmN.jpg)  
-![VoiceScreen](https://i.imgur.com/XyZ1234.png)  
-![VoiceScreen-Mobile](https://i.imgur.com/PqRsTuv.jpg)
+![ChatScreen](https://imgur.com/BYxnGem)  
+![ChatScreen-Mobile](https://imgur.com/P4lJd7I)  
+![VoiceScreen](https://imgur.com/a/xWpYgUB)  
+![VoiceScreen-Mobile](https://imgur.com/tyLyhEW)
 
 
 ## Product Spec
