@@ -18,8 +18,8 @@ CuratAI transforms the traditional museum experience by merging state-of-the-art
 
 <!-- Screenshots -->
 <!-- Desktop screenshots, full-width or however big you like -->
-<img src="https://imgur.com/BYxnGem.png" alt="ChatScreen" style="display:block; max-width:100%; margin-bottom:1rem; width:1000px; height:auto;" />
-<img src="https://imgur.com/LcfTW4z.png" alt="VoiceScreen" style="display:block; max-width:100%; margin-bottom:1.5rem; width:1000px; height:auto;" />
+<img src="https://imgur.com/BYxnGem.png" alt="ChatScreen" style="display:block; max-width:100%; margin-bottom:1rem; width:500px; height:auto;" />
+<img src="https://imgur.com/LcfTW4z.png" alt="VoiceScreen" style="display:block; max-width:100%; margin-bottom:1.5rem; width:500px; height:auto;" />
 
 <!-- Mobile screenshots side-by-side -->
 <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
