@@ -14,6 +14,30 @@ CuratAI is your ultimate AI-powered companion for exploring museums, cultural in
 
 CuratAI transforms the traditional museum experience by merging state-of-the-art AI technology with timeless storytelling. Today, users interact with our engaging chat interface for tour recommendations, dynamic Q&A, and personalized content based on their interests. In the near future, our AI will be able to talk and visually interpret exhibits, creating an immersive, multi-sensory experience that revolutionizes cultural exploration.
 
+### Screenshots
+
+<!-- Screenshots -->
+<!-- Desktop screenshots, full-width or however big you like -->
+<img src="https://imgur.com/BYxnGem.png" alt="ChatScreen" style="display:block; max-width:100%; margin-bottom:1rem; width:500px; height:auto;" />
+<img src="https://imgur.com/LcfTW4z.png" alt="VoiceScreen" style="display:block; max-width:100%; margin-bottom:1.5rem; width:500px; height:auto;" />
+
+<!-- Mobile screenshots side-by-side -->
+<div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+  <img
+    src="https://imgur.com/P4lJd7I.png"
+    alt="ChatScreen-Mobile"
+    style="width:200px; height:auto;"
+  />
+  <img
+    src="https://imgur.com/tyLyhEW.png"
+    alt="VoiceScreen-Mobile"
+    style="width:200px; height:auto;"
+  />
+</div>
+
+
+
+
 ## Product Spec
 
 ### 1. User Features
@@ -23,10 +47,10 @@ CuratAI transforms the traditional museum experience by merging state-of-the-art
 - **Chat-Based Interface:**  
   Users receive personalized tour recommendations and engage in dynamic Q&A with our AI through a conversational chat interface.
 
-**Future Enhancements:**
-
 - **Voice Interaction:**  
   Our AI will support real-time voice conversations, allowing users to speak naturally and receive audible responses for a more immersive experience.
+
+**Future Enhancements:**
   
 - **Vision Capabilities:**  
   The AI will be able to interpret visual inputs—such as photos of exhibits—to provide detailed, context-aware information and insights, further personalizing the tour experience.
